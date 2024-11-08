@@ -23,7 +23,8 @@
     msgEnterAddress db "Enter address: $"
     msgEnterContact db "Enter contact: $"
     msgEnterSalary db "Enter salary: $"
-
+    ; Other data messages...
+    msgLimitReached db "Employee limit reached!", 13, 10, "$"
     ; Storage for employee data (max 10 employees, adjust as needed)
     total db 0                      ; Total number of employees
     maxEmployees equ 10
@@ -118,97 +119,84 @@ get_choice proc
 get_choice endp
 
 emp_data proc
-emp_data proc
-    ; Prompt for number of employees
-    lea dx, msgEmpCountPrompt
-    mov ah, 9
-    int 21h
-    
-    ; Get number of employees
-    mov ah, 01h
-    int 21h
-    sub al, '0'                     ; Convert ASCII to integer
-    mov cl, al                       ; Store number in CL for loop count
-    
-    ; Initialize BX for data storage
-    mov al, total                    ; Move total into AL (8-bit)
-    mov bl, al                        ; Move the value of AL into BL (lower 8 bits of BX)
-    mov al, 90                        ; Size of each employee record
-    mul bl                            ; BX = total * empSize (for proper offset calculation)
-    add bx, offset empData           ; Point to start of next employee record
-    
-    ; Loop to enter each employee's data
-    mov ch, 0                         ; Clear CH for loop count
-empdata_loop:
-    ; Check if we've added the required number of employees
-    cmp ch, cl                       ; Compare loop count (ch) with number of employees (cl)
-    je end_empdata                   ; If loop count equals number of employees, jump to end
-    
+    ; Check if max employee limit reached
+    mov al, total            ; Load the total into AL (8-bit register)
+    cmp al, maxEmployees
+    jae emp_data_full        ; If total >= maxEmployees, skip adding
+
+    ; Calculate offset for the new employee
+    mov bl, al               ; Move AL (total) into BL (lower 8 bits of BX)
+    mov al, empSize          ; Move empSize into AL
+    mul bl                   ; Multiply total * empSize
+    add bx, offset empData   ; Point BX to start of new employee's record
+
     ; Enter employee name
+    call newline
     lea dx, msgEnterName
     mov ah, 9
     int 21h
     call get_input
-    mov di, bx                       ; Store name at empData + offset
+    mov di, bx
     mov si, offset buffer
     call store_string
     
     ; Enter employee ID
+    call newline
     lea dx, msgEnterID
     mov ah, 9
     int 21h
     call get_input
-    add di, 30                       ; Next 30 bytes for ID
+    add di, 30
     mov si, offset buffer
     call store_string
 
     ; Enter employee address
+    call newline
     lea dx, msgEnterAddress
     mov ah, 9
     int 21h
     call get_input
-    add di, 20                       ; Next 20 bytes for address
+    add di, 20
     mov si, offset buffer
     call store_string
 
     ; Enter employee contact
+    call newline
     lea dx, msgEnterContact
     mov ah, 9
     int 21h
     call get_input
-    add di, 20                       ; Next 20 bytes for contact
+    add di, 20
     mov si, offset buffer
     call store_string
 
     ; Enter employee salary
+    call newline
     lea dx, msgEnterSalary
     mov ah, 9
     int 21h
     call get_input
-    add di, 20                       ; Next 20 bytes for salary
+    add di, 20
     mov si, offset buffer
     call store_string
-    
-    ; Prepare for next employee
-    add bx, empSize                  ; Move to next employee slot in data array
-    inc ch                           ; Increase counter
-    
-    ; Loop back to ask for next employee's data
-    jmp empdata_loop                 ; Continue loop for the next employee
-    
-end_empdata:
+
     ; Display employee added message
     lea dx, msgEmployeeAdded
     mov ah, 9
     int 21h
     
-    ; Update total employee count
-    mov al, total
-    add al, cl
-    mov total, al
+    ; Increment total employee count
+    inc total
     ret
 
+emp_data_full:
+    ; Display message if max employee limit is reached
+    lea dx, msgLimitReached
+    mov ah, 9
+    int 21h
+    ret
 emp_data endp
+
 
 ; Procedure to get input into buffer
 buffer db 50 dup(?)
@@ -218,6 +206,16 @@ get_input proc
     int 21h
     ret
 get_input endp
+
+newline proc
+    mov ah, 2
+    mov dl, 13      
+    int 21h
+    mov dl, 10      
+    int 21h
+    ret
+newline endp
+
 
 ; Procedure to store string from buffer to memory at [di]
 store_string proc
