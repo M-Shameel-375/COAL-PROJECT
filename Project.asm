@@ -15,7 +15,7 @@
     msgOption7 db 9, 9, "| [7]  To Exit                              |", 13, 10, "$"
     msgFooter db 9, 9, "|____________________________________________|", 13, 10, "$"
     msgPrompt db 13, 10, 9, 9, "Enter your choice ==> $"
-    
+
     ; Employee data prompts
     msgEmpCountPrompt db "How many employees data do you want to enter ==> $"
     msgEmployeeAdded db "Employee Added successfully", 0Dh, 0Ah, "$"
@@ -58,6 +58,7 @@ enter_data:
 exit_program:
     mov ah, 4Ch              ; Exit to DOS
     int 21h
+
 main endp
 
 display_menu_proc proc
