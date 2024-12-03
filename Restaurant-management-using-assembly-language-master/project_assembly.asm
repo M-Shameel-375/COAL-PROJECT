@@ -7,13 +7,13 @@ endm
 
 .STACK 1000H
 .DATA
-M1 DB 10,13,10,13,'                  Our Five star Restaurants      $',10,13 
-M2 DB 10,13,10,13,'Enter your Choise $'
+M1 DB 10,13,10,13,'                  Our Five Star Restaurant      $',10,13 
+M2 DB 10,13,10,13,'Enter your Choice $'
 
 M3 DB 10,13,'                  1.Breakfast Menu         $' 
-M4 DB 10,13,'                   2.Lunch Menu            $'
-M5 DB 10,13,'                   3.Dinner Menu          $'
-M7 DB 10,13,'                       4.Drinks             $'  
+M4 DB 10,13,'                  2.Lunch Menu            $'
+M5 DB 10,13,'                  3.Dinner Menu          $'
+M7 DB 10,13,'                  4.Drinks             $'  
 str db 10,13,'       3-for same menu       $'               
                
 M8 DB 10,13,10,13,'Enter the food number $'
@@ -33,7 +33,7 @@ M17 DB 10,13,'                      9.Goats Feet              60/-              
 
 ;lunch & dinner 
 
-M25 DB 10,13,'   1.Karchi Biryani(Kabab+Egg)              90/-                $' 
+M25 DB 10,13,'   1.Karachi Biryani(Kabab+Egg)              90/-                $' 
 M26 DB 10,13,'    2.Chicken Biryani(Kabab+Egg)              90/-                $' 
 M27 DB 10,13,'     3.Plain Polau                            30/-                $' 
 M28 DB 10,13,'      4.Chicken Bhuna Khichuri(with Kabab+Egg) 90/-                $'
@@ -60,7 +60,7 @@ M36 DB 10,13,'            9.Molay/Kaski Fish        60/-                        
 
 
 ;Drinks
-M49 DB 10,13,'  1.Shoft Drinks 8/-                      $'
+M49 DB 10,13,'  1.Soft Drink 8/-                      $'
 M50 DB 10,13,'   2.Laschi       6/-                      $'
 M51 DB 10,13,'    3.Borhani      9/-                      $'
 M52 DB 10,13,'     4.Labang       9/-                      $'
